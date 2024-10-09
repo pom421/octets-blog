@@ -1,0 +1,64 @@
+---
+title: 'Astro 5'
+description: Migration collections en Astro 5
+pubDate: 2024-10-09
+heroImage: '/blog-placeholder-5.jpg'
+---
+
+```shell
+yarn create astro --ref next
+```
+
+J'ai choisi le template de blog et typescript.
+
+Le blog est alors fonctionnel sur `http://localhost:4321` mais il n'utilise pas le fonctionnement d'Astro 5.
+
+Voici les modifications que j'ai apportées pour utiliser Astro 5.
+
+
+- modifier le `defineCollection` pour utiliser le nouvel attribut loader.
+
+````ts
+const blog = defineCollection({
+	// type: 'content', // Avant
+	loader: glob({ pattern: "**\/*.{md,mdx}", base: "./src/content/blog" }), // Après
+    ...
+});	        
+````
+
+
+- post.slug n'existe plus. Il faut le remplacer par post.id.
+
+`index.astro`
+
+````html
+<a href={`/blog/${post.id}/`}>
+<img width={720} height={360} src={post.data.heroImage} alt="" />
+<h4 class="title">{post.data.title}</h4>
+<p class="date">
+    <FormattedDate date={post.data.pubDate} />
+</p>
+````
+
+- dans `[...slug].astro`, changer slug en id
+
+````ts
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	return posts.map((post) => ({
+		params: { slug: post.id },
+		props: post,
+	}));
+}
+````
+
+- changer également la fonction render qui n'est plus une méthode de post mais une fonction de `astro:content`
+
+```ts
+// const { Content } = await post.render(); // Avant
+
+import { render } from 'astro:content'; // Après
+...
+const { Content } = await render(post); 
+````
+
