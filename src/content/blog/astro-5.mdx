@@ -1,8 +1,9 @@
 ---
-title: 'Astro 5'
+title: Astro 5
 description: Migration collections en Astro 5
 pubDate: 2024-10-09
-heroImage: '/blog-placeholder-5.jpg'
+heroImage: /blog-placeholder-5.jpg
+updatedDate: 2024-10-10
 ---
 
 ```shell
@@ -126,3 +127,15 @@ export function GitHubIcon() {
   );
 }
 ```
+
+### Tailwind typography
+
+```shell
+yarn add -D @tailwindcss/typography
+
+dans tailwind.config.js
+  plugins: [
+  require('@tailwindcss/typography'),
+  ],
+```
+
