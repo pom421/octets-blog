@@ -7,7 +7,7 @@ export const GitHubLink = () => {
         <span className="sr-only">
           Aller sur le repository GitHub d'octets blog
         </span>
-        <div style={{ width: 50}}>
+        <div className="w-8 text-gray-400">
           <GitHubIcon />
         </div>
       </a>
