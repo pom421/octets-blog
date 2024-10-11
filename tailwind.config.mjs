@@ -57,6 +57,7 @@ export default {
     },
     fontFamily: {
       "geist-sans": ["var(--font-geist-sans)", "sans-serif"],
+      "twinkle-star": ["Twinkle Star", "serif"],
     },
     screens: {
       sm: "36em",
