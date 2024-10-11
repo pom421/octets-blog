@@ -6,6 +6,16 @@ heroImage: /blog-placeholder-5.jpg
 updatedDate: 2024-10-10
 ---
 
+<div class="text-2xl">Table des matières</div>
+
+<ul>
+  {getHeadings().map((heading) => (
+    <li>
+      <a href={`#${heading.slug}`}>{heading.text}</a>
+    </li>
+  ))}
+</ul>
+
 ```shell
 yarn create astro --ref next
 ```
@@ -16,42 +26,40 @@ Le blog est alors fonctionnel sur `http://localhost:4321` mais il n'utilise pas 
 
 Voici les modifications que j'ai apportées pour utiliser Astro 5.
 
-
 - modifier le `defineCollection` pour utiliser le nouvel attribut loader.
 
-````ts
+```ts
 const blog = defineCollection({
 	// type: 'content', // Avant
 	loader: glob({ pattern: "**\/*.{md,mdx}", base: "./src/content/blog" }), // Après
     ...
-});	        
-````
-
+});
+```
 
 - post.slug n'existe plus. Il faut le remplacer par post.id.
 
 `index.astro`
 
-````html
+```html
 <a href={`/blog/${post.id}/`}>
 <img width={720} height={360} src={post.data.heroImage} alt="" />
 <h4 class="title">{post.data.title}</h4>
 <p class="date">
     <FormattedDate date={post.data.pubDate} />
 </p>
-````
+```
 
 - dans `[...slug].astro`, changer slug en id
 
-````ts
+```ts
 export async function getStaticPaths() {
-	const posts = await getCollection('blog');
-	return posts.map((post) => ({
-		params: { slug: post.id },
-		props: post,
-	}));
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: post,
+  }));
 }
-````
+```
 
 - changer également la fonction render qui n'est plus une méthode de post mais une fonction de `astro:content`
 
@@ -60,8 +68,8 @@ export async function getStaticPaths() {
 
 import { render } from 'astro:content'; // Après
 ...
-const { Content } = await render(post); 
-````
+const { Content } = await render(post);
+```
 
 ### Déploiement sur Vercel
 
@@ -71,9 +79,9 @@ Si le site est uniquement statique, il n'y a rien à configurer.
 
 S'il utilise du SSR (``output: "server"` or `output: "hybrid"``) alors un adapter est nécessaire.
 
-````shell
+```shell
 npx astro add vercel
-````
+```
 
 ### Intégration de React
 
@@ -85,13 +93,13 @@ Il faut ajouter une intégration Astro pour React.
 
 ```shell
 yarn astro add react
-````
+```
 
 Cela va installer les dépendances React, modifier le fichier astro.config.mjs pour prendre en compte les composants React et modifier le fichier tsconfig.json pour reconnaître les fichiers tsx.
 
 ### SVG
 
-J'ai pris le code SVG du logo GitHub. 
+J'ai pris le code SVG du logo GitHub.
 
 Je l'ai passé sous le site `https://svg2jsx.com/` pour obtenir le code JSX.
 
@@ -139,3 +147,47 @@ dans tailwind.config.js
   ],
 ```
 
+### Fonts
+
+Le moyen le plus rapide est d'utiliser [Fontsource](https://fontsource.org/) pour trouver une font qui nous intéresse.
+Fontsource simplifie l'ajout de font Google fonts ou autres fonts open-source.
+Il fournit des modules npm pour self-host des fonts dans un projet.
+
+Par exemple, la font [Poppins](https://fontsource.org/fonts/poppins).
+
+```shell
+yarn add @fontsource/twinkle-star
+```
+
+GlobalLayout.astro
+
+```astro
+import "@fontsource/poppins"
+```
+
+tailwind.config.mjs
+
+```js
+import defaultTheme from "tailwindcss/defaultTheme";
+
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ["Poppins", ...defaultTheme.fontFamily.sans],
+      },
+    },
+  },
+  plugins: [],
+};
+```
+
+Il ne reste plus qu'à l'utiliser dans un fichier astro.
+
+index.astro
+
+```html
+<h4 class="font-slackey text-xl md:text-3xl">{firstPost.data.title}</h4>
+```

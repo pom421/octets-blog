@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
 const colors = require("tailwindcss/colors");
+import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
   darkMode: ["class"],
@@ -56,8 +57,10 @@ export default {
       },
     },
     fontFamily: {
-      "geist-sans": ["var(--font-geist-sans)", "sans-serif"],
-      "twinkle-star": ["Twinkle Star", "serif"],
+      "geist-sans": ["var(--font-geist-sans)", ...defaultTheme.fontFamily.sans],
+      "twinkle-star": ["Twinkle Star", ...defaultTheme.fontFamily.sans],
+      slackey: ["Slackey", ...defaultTheme.fontFamily.sans],
+      poppins: ["Poppins", ...defaultTheme.fontFamily.sans],
     },
     screens: {
       sm: "36em",

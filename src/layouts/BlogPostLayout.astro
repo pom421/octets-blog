@@ -14,18 +14,18 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
       {heroImage && <img width={1020} height={510} src={heroImage} alt="" />}
     </div>
     <div class="prose lg:prose-xl">
-      <div class="text-center pt-4 mb-4">
+      <div class="mb-4 pt-4 text-center">
         <div class="mb-2 text-gray-500">
           <FormattedDate date={pubDate} />
           {
             updatedDate && (
-              <div class="italic text-base">
+              <div class="text-base italic">
                 Mis à jour le <FormattedDate date={updatedDate} />
               </div>
             )
           }
         </div>
-        <h1 class="">{title}</h1>
+        <h1 class="font-poppins">{title}</h1>
         <hr />
       </div>
       <slot />
