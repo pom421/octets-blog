@@ -16,6 +16,8 @@ updatedDate: 2024-10-10
   ))}
 </ul>
 
+## Installation
+
 ```shell
 yarn create astro --ref next
 ```
@@ -24,7 +26,7 @@ J'ai choisi le template de blog et typescript.
 
 Le blog est alors fonctionnel sur `http://localhost:4321` mais il n'utilise pas le fonctionnement d'Astro 5.
 
-Voici les modifications que j'ai apportées pour utiliser Astro 5.
+Pour utiliser Astro 5, il faut apporter les modifications suivantes :
 
 - modifier le `defineCollection` pour utiliser le nouvel attribut loader.
 
@@ -42,11 +44,11 @@ const blog = defineCollection({
 
 ```html
 <a href={`/blog/${post.id}/`}>
-<img width={720} height={360} src={post.data.heroImage} alt="" />
-<h4 class="title">{post.data.title}</h4>
-<p class="date">
-    <FormattedDate date={post.data.pubDate} />
-</p>
+  <img width={720} height={360} src={post.data.heroImage} alt="" />
+  <h4 class="title">{post.data.title}</h4>
+  <p class="date">
+      <FormattedDate date={post.data.pubDate} />
+  </p>
 ```
 
 - dans `[...slug].astro`, changer slug en id
@@ -73,11 +75,13 @@ const { Content } = await render(post);
 
 ### Déploiement sur Vercel
 
-Il suffit d'aller sur l'UI de Vercel, de se connecter à GitHub et de choisir le repository.
+Aller sur l'UI de Vercel, se connecter à GitHub et choisir le repository.
 
 Si le site est uniquement statique, il n'y a rien à configurer.
 
-S'il utilise du SSR (``output: "server"` or `output: "hybrid"``) alors un adapter est nécessaire.
+S'il utilise du SSR (``output: "server"` or `output: "hybrid"``) alors un adapter sera nécessaire.
+
+Pour cela, ajouter l'intégration Vercel
 
 ```shell
 npx astro add vercel
@@ -85,7 +89,7 @@ npx astro add vercel
 
 ### Intégration de React
 
-J'ai ajouté une icone SVG en composant React.
+J'ai ajouté une icône SVG en composant React.
 
 Pour cela, il faut qu'Astro reconnaisse les fichiers .tsx.
 
@@ -95,7 +99,7 @@ Il faut ajouter une intégration Astro pour React.
 yarn astro add react
 ```
 
-Cela va installer les dépendances React, modifier le fichier astro.config.mjs pour prendre en compte les composants React et modifier le fichier tsconfig.json pour reconnaître les fichiers tsx.
+Cela va installer les `dépendances` React, modifier le fichier astro.config.mjs pour prendre en compte les composants React et modifier le fichier tsconfig.json pour reconnaître les fichiers tsx.
 
 ### SVG
 
@@ -190,4 +194,43 @@ index.astro
 
 ```html
 <h4 class="font-slackey text-xl md:text-3xl">{firstPost.data.title}</h4>
+```
+
+## ESLint
+
+```shell
+❯ yarn add -D eslint eslint-plugin-astro @typescript-eslint/parser eslint-plugin-jsx-a11y
+```
+
+eslint.config.mjs
+
+```js
+import eslintPluginAstro from "eslint-plugin-astro";
+
+export default [
+  // add more generic rule sets here, such as:
+  // js.configs.recommended,
+  ...eslintPluginAstro.configs.recommended,
+  {
+    rules: {
+      // override/add rules settings here, such as:
+      // "astro/no-set-html-directive": "error"
+    },
+  },
+];
+```
+
+Dans le settings.json de VSCode
+
+```json
+{
+  "editor.formatOnSave": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "astro", // Enable .astro
+    "typescript", // Enable .ts
+    "typescriptreact" // Enable .tsx
+  ]
+}
 ```
