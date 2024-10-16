@@ -11,6 +11,9 @@ import tailwind from "@astrojs/tailwind";
 // https://astro.build/config
 export default defineConfig({
   site: "https://octets-blog.vercel.app",
+  redirects: {
+    "/toto": "/blog",
+  },
   integrations: [
     mdx(),
     sitemap(),
